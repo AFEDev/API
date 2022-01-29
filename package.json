@@ -1,0 +1,25 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000A\u0000P\u0000I\u0000\r\u0000 \u0000",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "dead-server --port=3000 --host=localhost"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AFEDev/API.git"
+  },
+  "keywords": [],
+  "author": "Algirdas <algirduj@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AFEDev/API/issues"
+  },
+  "homepage": "https://github.com/AFEDev/API#readme",
+  "devDependencies": {
+    "dead-server": "^1.0.6",
+    "nodemon": "^2.0.15"
+  }
+}
