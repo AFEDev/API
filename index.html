@@ -8,37 +8,39 @@
       href="https://fonts.googleapis.com/css?family=Amatic+SC:regular,700"
       rel="stylesheet"
     />
-    <title>Document</title>
+    <title>S&P 500</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="app.js" defer></script>
+    <script src="app.js" type="module" defer ></script>
+    <script src="./src/table.js" type="module" defer ></script>
   </head>
   <body>
     <div class="wrapper">
       <div id="data_chart_heading">
         <h1 class="heading__text">S&P 500®</h1>
       </div>
-
       <div class="tab">
-        <button class="tablinks" id="show_table" )>Table</button>
+        <button class="tablinks active" id="show_table">Table</button>
         <button class="tablinks" id="show_chart">Chart</button>
       </div>
-      <div class="container_main">
-        <div class="tabcontent" id="data_table_container">
-          <div class="data_table_column_names"></div>
-          <div class="data_table_column_data"></div>
+      <div id="container_data"> </div>
+      <div class="container_main" id="table_container">
+        <div class="tabcontent" id="table">
+         
         </div>
+      </div>
         <div class="tabcontent" id="data_chart_container">
           <div>
             <canvas id="myChart"></canvas>
           </div>
         </div>
-      </div>
+     
       <div class="date_sort">
-        <label id="date__start-text">Start date:</label>
-        <input type="date" id="date__start_value" />
-        <label id="date__end-text">End date:</label>
-        <input type="date" id="date__end_value" />
+        <div><label id="date__start-text">Start date:</label>
+        <input type="date" id="date__start_value" /></div>
+        <div> <label id="date__end-text">End date:</label>
+        <input type="date" id="date__end_value" /></div>
+        <button id="sumbitDate">Submit</button>
       </div>
     </div>
   </body>

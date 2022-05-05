@@ -1,28 +1,58 @@
-fetch(
-  "https://data.nasdaq.com/api/v3/datasets/BCIW/_INX.json?api_key=7MbAh2-vz5YcetMp2UrT"
-)
-  .then((response) => response.json())
-  .then((sp500data) => {
-    sp500 = sp500data;
-    console.log(sp500);
-    //console.log(sp500.dataset.data[5]);
+import { createChart } from "./src/chartConfig.js";
+import { drawTable } from "./src/table.js";
 
-    let filterDate = [];
+let sp500;
+
+async function  loadAPIdata (url, divForLoaderID) {
+  let loader = document.getElementById('container_data')
+  console.log(loader);
+  loader.innerHTML = `<div class='loader'></div>`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+  });
+  const responseResult = await response.json();
+console.log(responseResult);
+  if (response.ok) {
+  loader.innerHTML = ""
+   sp500 = responseResult;
+   drawTable('table', sp500.dataset.column_names, sp500.dataset.data);
+   return sp500;
+  } else {
+   return loader.innerHTML = response.message;
+  }
+}
+
+
+await loadAPIdata("https://data.nasdaq.com/api/v3/datasets/BCIW/_INX.json?api_key=7MbAh2-vz5YcetMp2UrT", 'container_data')
+
+
+
+
+console.log(sp500);
+
+console.log(sp500.dataset);
+
+   // const filterDate = [];
+
+    const filterDate = [];
     const filterOpen = [];
     const filterHigh = [];
     const filterLow = [];
     const filterClose = [];
 
     sp500.dataset.data.forEach((element, i) => {
-      // console.log(sp500.dataset.data[0][0]);
-      filterDate.unshift(sp500.dataset.data[i][0]);
-      filterOpen.unshift(sp500.dataset.data[i][1]);
-      filterHigh.unshift(sp500.dataset.data[i][2]);
-      filterLow.unshift(sp500.dataset.data[i][3]);
-      filterClose.unshift(sp500.dataset.data[i][4]);
-      //console.log(element);
-      // console.log(typeof element);
+      console.log(element);
+      filterDate.unshift(element[0]);
+      filterOpen.unshift(element[1]);
+      filterHigh.unshift(element[2]);
+      filterLow.unshift(element[3]);
+      filterClose.unshift(element[4]);              
+
     });
+
+
+
 
     function dataShowSelector(evt, dataType) {
       // Declare all variables
@@ -42,55 +72,30 @@ fetch(
 
       // Show the current tab, and add an "active" class to the button that opened the tab
       document.getElementById(dataType).style.display = "block";
-      // evt.currentTarget.className += " active";
+      document.getElementById(evt).classList.add('active')
+
     }
+
+    dataShowSelector("show_table", "table")
 
     const buttonTable = document
       .getElementById("show_table")
       .addEventListener("click", () => {
-        dataShowSelector(buttonTable, "data_table_container");
+        dataShowSelector("show_table", "table");
       });
 
     const buttonChart = document
       .getElementById("show_chart")
       .addEventListener("click", () => {
-        dataShowSelector(buttonChart, "data_chart_container");
+          dataShowSelector("show_chart", "data_chart_container");
       });
 
-    // console.log("Masyvas su data: ", filterDate);
+ 
     // console.log("Masyvas su Open: ", filterOpen);
 
-    sp500.dataset.column_names.forEach((element) => {
-      const data_table_column_names = document.querySelector(
-        ".data_table_column_names"
-      );
-      const div_name = document.createElement("div");
-      data_table_column_names.appendChild(div_name);
-      div_name.innerText = element;
-      div_name.classList.add("row_element");
-    });
-
-    sp500.dataset.data.forEach((element) => {
-      const data_table_column_data = document.querySelector(
-        ".data_table_column_data"
-      );
-      const div_container = document.createElement("div");
-      data_table_column_data.appendChild(div_container);
-      div_container.classList.add("data_row");
-      element.forEach((value) => {
-        const div_data = document.createElement("div");
-        div_container.appendChild(div_data);
-        div_data.innerText = value;
-        div_data.classList.add("row_element");
-      });
-    });
-
     //chart --------------------------------------
-
-    const labels = filterDate;
-
-    const data = {
-      labels: labels,
+    export const data = {
+      labels: filterDate,
       datasets: [
         {
           label: "Open",
@@ -119,7 +124,7 @@ fetch(
       ],
     };
 
-    const config = {
+    export  const config = {
       type: "line",
       data: data,
       options: {
@@ -129,67 +134,63 @@ fetch(
               color: "white",
               lineWidth: 0.2,
             },
-
             ticks: { color: "white" },
           },
-
+  
           X: {
             grid: {
               color: "white",
               lineWidth: 0.2,
             },
-
             ticks: { color: "white" },
           },
         },
       },
     };
+    createChart(config);
 
-    function addData(chart, label, data) {
-      chart.data.labels.push(label);
-      chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
-      });
-      chart.update();
-    }
-
-    function updateConfigByMutating(chart) {
-      chart.options.plugins.title.text = "new title";
-      chart.update();
-    }
-
-    function removeData(chart) {
-      chart.data.labels.pop();
-      chart.data.datasets.forEach((dataset) => {
-        dataset.data.pop();
-      });
-      chart.update();
-    }
-
-    const myChart = new Chart(document.getElementById("myChart"), config);
 
     //chart ends--------------------------------
 
     //values for data selector------------------------------
 
     const date__start_value = document.getElementById("date__start_value");
-    const date__end_value = document.getElementById("date__end_value");
 
-    date__start_value.setAttribute("value", sp500.dataset.start_date);
-    date__start_value.setAttribute("min", sp500.dataset.start_date);
-    date__start_value.setAttribute("max", sp500.dataset.end_date);
+    date__start_value .setAttribute("min", sp500.dataset.start_date)
+    date__start_value .setAttribute("max", sp500.dataset.end_date);
 
-    date__end_value.setAttribute("value", sp500.dataset.end_date);
+    const date__end_value = document.getElementById("date__end_value")
+   
     date__end_value.setAttribute("min", sp500.dataset.start_date);
     date__end_value.setAttribute("max", sp500.dataset.end_date);
 
-    let a = "";
 
-    date__start_value.addEventListener("change", function () {
-      a = this.value;
-    });
+    let startDate
+    date__start_value.addEventListener('input', () => {
+      console.log(date__start_value.value) // 2021-03-31
+      startDate = date__start_value.value
+    })
+   let endDate
+   date__end_value.addEventListener('input', () => {
+      console.log(date__end_value.value) // 2021-03-31
+      endDate = date__end_value.value
+    })
 
-    //data filter experimental
+    document.getElementById("sumbitDate").addEventListener('click', () => {
+      console.log(startDate);
+      console.log(endDate);
+      if (startDate != "" && endDate != "" && startDate < endDate) {
+        console.log("date Ok");
+      } else {
+        console.log("date NotOk");
+      }
+    })
+
+
+
+
+
+    //TODO data filter
 
     function hammingDist(str1, x) {
       for (let i = 0; i < str1.length; i++) {
@@ -198,5 +199,4 @@ fetch(
       return str1;
     }
 
-    console.log(filterDate);
-  });
+
