@@ -34,7 +34,7 @@
 /* Style the tab */
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
+
   background-color: #000000;
 }
 
@@ -52,6 +52,7 @@
   cursor: pointer;
   padding: 5px 5px;
   transition: 0.3s;
+  background-color: rgb(38, 37, 37);
 }
 
 /* Change background color of buttons on hover */
@@ -80,12 +81,13 @@
 
 
 header {
-  border: 3px solid blueviolet;
+  border: 3px solid #ccc;
   height: 20%;
   min-width: 100%;
   display: flex;
   z-index: 99;
   flex-flow: column;
+  margin-bottom: 20px;
 }
 
 h1 {
@@ -96,8 +98,6 @@ h1 {
   font-size: 5rem;
   text-align: center;
 }
-
-
 
 /* Safari */
 @-webkit-keyframes spin {
@@ -120,8 +120,6 @@ h1 {
   }
 }
 
-
-
 span {
   color: aliceblue;
   font-size: 24px;
@@ -131,7 +129,6 @@ span {
   color: white;
   margin-top: 20px;
 }
-
 
 #sumbitDate {
   color: #f3f3f3;
@@ -153,11 +150,19 @@ span {
   color: white;
   background-color: #ccc;
   margin-bottom: 10px;
+  justify-content: space-between;
 }
 
 .input_date {
   color: black;
   background-color: white;
   margin: 5px;
+  border: 1px solid #c4c4c4;
+  background-color: #fff;
+  padding: 3px 5px;
 
+}
+
+.date_sort label {
+  width: 200px;
 }
