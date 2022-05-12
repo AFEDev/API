@@ -1,16 +1,18 @@
-export async function  loadAPIdata (url, divForLoaderID) {
-  let loader = document.getElementById(divForLoaderID)
-  loader.innerHTML = `<div class='loader'></div>`;
 
-  const response = await fetch(url, {
-    method: 'GET',
-  });
-  const responseResult = await response.json();
-console.log(response);
-  if (response.ok) {
-   return responseResult;
-  } else {
-   return loader.innerHTML = response.message;
+export function dataShowSelector(evt, dataType) {
+
+  let i, tabcontent, tablinks;
+
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
   }
-}
 
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  document.getElementById(dataType).style.display = "block";
+  document.getElementById(evt).classList.add('active')
+}
