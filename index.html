@@ -16,6 +16,7 @@
   </head>
   <body>
     <div class="wrapper">
+      <header>
       <div id="data_chart_heading">
         <h1 class="heading__text">S&P 500®</h1>
       </div>
@@ -23,6 +24,7 @@
         <button class="tablinks active" id="show_table">Table</button>
         <button class="tablinks" id="show_chart">Chart</button>
       </div>
+    </header>
       <div id="container_data"> </div>
       <div class="container_main" id="table_container">
         <div class="tabcontent" id="table">
@@ -37,9 +39,9 @@
      
       <div class="date_sort">
         <div><label id="date__start-text">Start date:</label>
-        <input type="date" id="date__start_value" /></div>
+        <input class="input_date" type="date" id="date__start_value" /></div>
         <div> <label id="date__end-text">End date:</label>
-        <input type="date" id="date__end_value" /></div>
+        <input class="input_date" type="date" id="date__end_value" /></div>
         <button id="sumbitDate">Submit</button>
       </div>
     </div>

@@ -1,80 +1,45 @@
-import { createChart } from "./src/chartConfig.js";
+import { ChartData } from "./src/chartConfig.js";
 import { drawTable } from "./src/table.js";
+import {dataShowSelector} from "./src/components.js"
 
-let sp500;
 
-async function  loadAPIdata (url, divForLoaderID) {
+
+async function  loadAPIdata (url) {
   let loader = document.getElementById('container_data')
-  console.log(loader);
-  loader.innerHTML = `<div class='loader'></div>`;
 
-  const response = await fetch(url, {
-    method: 'GET',
-  });
-  const responseResult = await response.json();
-console.log(responseResult);
-  if (response.ok) {
-  loader.innerHTML = ""
-   sp500 = responseResult;
-   drawTable('table', sp500.dataset.column_names, sp500.dataset.data);
-   return sp500;
-  } else {
-   return loader.innerHTML = response.message;
+ loader.innerHTML = `<div class='loader_big'></div>`;
+
+ const controller = new AbortController()
+
+ const timeoutId = setTimeout(() => controller.abort(), 5000)
+
+ fetch(url, { signal: controller.signal })
+.then(async response => {
+  if (!response.ok) {
+    loader.innerHTML = `<div class='container_error_message'>Server Error</div>`
   }
+  return response.json();
+}) 
+.then(response => {
+  const responseResult = response
+  loader.innerHTML = ""
+  drawTable('table', responseResult.dataset.column_names, responseResult.dataset.data);
+  const chartData = new ChartData(responseResult);
+  chartData.createChart()
+  console.log(responseResult);
+  return responseResult;
+})
+.catch(error => {
+  loader.innerHTML = `<div class='container_error_message'>Server Error</div>`
+
+});
 }
 
-
-await loadAPIdata("https://data.nasdaq.com/api/v3/datasets/BCIW/_INX.json?api_key=7MbAh2-vz5YcetMp2UrT", 'container_data')
-
-
-
-
-console.log(sp500);
-
-console.log(sp500.dataset);
-
-   // const filterDate = [];
-
-    const filterDate = [];
-    const filterOpen = [];
-    const filterHigh = [];
-    const filterLow = [];
-    const filterClose = [];
-
-    sp500.dataset.data.forEach((element, i) => {
-      console.log(element);
-      filterDate.unshift(element[0]);
-      filterOpen.unshift(element[1]);
-      filterHigh.unshift(element[2]);
-      filterLow.unshift(element[3]);
-      filterClose.unshift(element[4]);              
-
-    });
+const apiData =  await loadAPIdata("https://data.nasdaq.com/api/v3/datasets/BCIW/_INX.json?api_key=7MbAh2-vz5YcetMp2UrT");
 
 
 
 
-    function dataShowSelector(evt, dataType) {
-      // Declare all variables
-      let i, tabcontent, tablinks;
-
-      // Get all elements with class="tabcontent" and hide them
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-      }
-
-      // Get all elements with class="tablinks" and remove the class "active"
-      tablinks = document.getElementsByClassName("tablinks");
-      for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-      }
-
-      // Show the current tab, and add an "active" class to the button that opened the tab
-      document.getElementById(dataType).style.display = "block";
-      document.getElementById(evt).classList.add('active')
-
-    }
 
     dataShowSelector("show_table", "table")
 
@@ -90,79 +55,18 @@ console.log(sp500.dataset);
           dataShowSelector("show_chart", "data_chart_container");
       });
 
- 
-    // console.log("Masyvas su Open: ", filterOpen);
-
-    //chart --------------------------------------
-    export const data = {
-      labels: filterDate,
-      datasets: [
-        {
-          label: "Open",
-          backgroundColor: "rgb(255, 99, 132)",
-          borderColor: "rgb(255, 99, 132)",
-          data: filterOpen,
-        },
-        {
-          label: "High",
-          backgroundColor: "blue",
-          borderColor: "blue",
-          data: filterHigh,
-        },
-        {
-          label: "Low",
-          backgroundColor: "green",
-          borderColor: "green",
-          data: filterLow,
-        },
-        {
-          label: "Close",
-          backgroundColor: "yellow",
-          borderColor: "yellow",
-          data: filterClose,
-        },
-      ],
-    };
-
-    export  const config = {
-      type: "line",
-      data: data,
-      options: {
-        scales: {
-          y: {
-            grid: {
-              color: "white",
-              lineWidth: 0.2,
-            },
-            ticks: { color: "white" },
-          },
-  
-          X: {
-            grid: {
-              color: "white",
-              lineWidth: 0.2,
-            },
-            ticks: { color: "white" },
-          },
-        },
-      },
-    };
-    createChart(config);
-
-
-    //chart ends--------------------------------
-
     //values for data selector------------------------------
 
-    const date__start_value = document.getElementById("date__start_value");
+    // const date__start_value = document.getElementById("date__start_value");
 
-    date__start_value .setAttribute("min", sp500.dataset.start_date)
-    date__start_value .setAttribute("max", sp500.dataset.end_date);
 
-    const date__end_value = document.getElementById("date__end_value")
+    // date__start_value .setAttribute("min", apiData.dataset.start_date)
+    // date__start_value .setAttribute("max", apiData.dataset.end_date);
+
+    // const date__end_value = document.getElementById("date__end_value")
    
-    date__end_value.setAttribute("min", sp500.dataset.start_date);
-    date__end_value.setAttribute("max", sp500.dataset.end_date);
+    // date__end_value.setAttribute("min", apiData.dataset.start_date);
+    // date__end_value.setAttribute("max", apiData.dataset.end_date);
 
 
     let startDate
@@ -185,8 +89,6 @@ console.log(sp500.dataset);
         console.log("date NotOk");
       }
     })
-
-
 
 
 
