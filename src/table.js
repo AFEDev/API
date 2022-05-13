@@ -34,7 +34,7 @@ export function drawTable (divID, arrayOfLabels, arrayOfData) {
     }
   }
 
-  export const getTableDateRange = (apiData) => {
+    export const getTableDateRange = (apiData) => {
 
     console.log(apiData);
       const date__start_value = document.getElementById("date__start_value");
